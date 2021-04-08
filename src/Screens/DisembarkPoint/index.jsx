@@ -17,7 +17,7 @@ import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Embark = ({ navigation,route }) => {
+const PointDisembark = ({ navigation,route }) => {
   const [checked, setChecked] = useState(false);
   const [search,setSearch] = useState();
   const [embarks,setEmbark] = useState([]);
@@ -43,8 +43,8 @@ const Embark = ({ navigation,route }) => {
 
   async function saveEmbark(idPointEmbark){
 	  
-	await AsyncStorage.setItem('@juntouApp:idPointEmbark',JSON.stringify(idPointEmbark))
-	
+	await AsyncStorage.setItem('@juntouApp:idPointDisembark',JSON.stringify(idPointEmbark))
+	navigation.navigate("SelectHour");
 	
 }
 
@@ -91,4 +91,4 @@ const Embark = ({ navigation,route }) => {
   );
 };
 
-export default Embark;
+export default PointDisembark;

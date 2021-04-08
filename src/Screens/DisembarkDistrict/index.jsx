@@ -28,11 +28,11 @@ const DisembarkDistrict = ({ navigation,route }) => {
 		const dominate =await AsyncStorage.getItem('@juntouApp:dominante');
 		if(dominate==1){
 			//Bairro dominate então mostrar bairros secundários
-			const {data} = await axios.get(url+`/point/n/like/noDominante`)
+			const {data} = await axios.get(url+`/bairro/n/like/noDominante`)
 			setDistrictDisembark(data);
 			
 		}else{
-			const {data} = await axios.get(url+`/point/n/like/dominante`)
+			const {data} = await axios.get(url+`/bairro/n/like/dominante`)
 			setDistrictDisembark(data);
 		}
 	}	  

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   View,
   Text,
@@ -11,13 +11,61 @@ import { CheckBox } from "react-native-elements";
 import Header from "../../Components/HeaderPadrao";
 import styles from "./styles";
 import { color, textos } from "../../constants";
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const SelectHour = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
+  const [district,setDistrict] = useState();
+  const [districtDisembark,setDistrictDisembark] = useState();
+  const [pointEmbark,setPointEmbark] = useState();
+  const [pointDisembark,setPointDisembark] = useState();
 
+  const url='http://192.168.0.125:3005';
+
+	useEffect(() => {
+		//Buscar Nome do bairro
+		async function DistrictEmbark(){
+			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
+			const {data} = await axios.get(url+`/bairro/${idDistrictEmbark}/info`)
+			const dados = data[0].name
+			setDistrict(dados);
+		}
+		DistrictEmbark();
+		async function DistrictDisembark(){
+			//buscar nome do desembarque
+			const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict')
+			const {data} = await axios.get(url+`/bairro/${idDisembarkDistrict}/info`);
+			const dados = data[0].name;
+			setDistrictDisembark(dados);
+		}
+		DistrictDisembark();
+		async function PointEmbark(){
+			//Buscar nome do ponto de embarque
+			const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark')
+			const {data} = await axios.get(url+`/point/${idPointEmbark}/info`)
+			
+			const dados = data[0].name
+			setPointEmbark(dados);
+		}
+		PointEmbark();
+
+		async function PointDisembark(){
+			//Buscar nome do ponto de desembarque
+			const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
+			const {data} = await axios.get(url+`/point/${idPointDisembark}/info`)
+			
+			const dados = data[0].name
+			setPointDisembark(dados);
+		}
+		PointDisembark();
+		
+	}, [])
+
+	
   return (
     <View style={styles.container}>
-      <Header />
 
       <View style={styles.valueView}>
         <Text style={styles.value}>R$5,00</Text>
@@ -27,17 +75,17 @@ const SelectHour = ({ navigation }) => {
         <View style={styles.containerItem}>
           <View style={styles.item}>
             <View style={styles.point} />
-            <Text style={styles.itemText}>Bairro Honório Bicalho</Text>
+            <Text style={styles.itemText}>{district}</Text>
           </View>
 
           <View style={styles.item}>
             <View style={styles.point} />
-            <Text style={styles.itemText}>Bairro Centro de Nova Lima</Text>
+            <Text style={styles.itemText}>{districtDisembark}</Text>
           </View>
 
           <View>
             <CheckBox
-              title="Praça  da rodoviaria - Honório Bicalho"
+              title={pointEmbark}
               checked={checked}
               onPress={() => setChecked(!checked)}
               checkedColor={color.button}
@@ -47,7 +95,7 @@ const SelectHour = ({ navigation }) => {
               }}
             />
             <CheckBox
-              title="Praça do mineiro (Próximo a Prefeitura)"
+              title={pointDisembark}
               checked={checked}
               onPress={() => setChecked(!checked)}
               checkedColor={color.button}

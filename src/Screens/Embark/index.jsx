@@ -17,28 +17,31 @@ import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Embark = ({ navigation,route }) => {
+const Embark = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
   const [search,setSearch] = useState();
   const [embarks,setEmbark] = useState([]);
-  const {id,name} = route.params;
+  
   const url='http://192.168.0.125:3005';
 
   useEffect(()=>{
 
 	if(search){
 		async function SearchEmbarque(){
-			const {data} = await axios.get(url+`/embarque/${id}/${search}/pesquisa`)
+			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
+			const {data} = await axios.get(url+`/embarque/${idDistrictEmbark}/${search}/pesquisa`)
 			setEmbark(data);
 			console.log("----------------")
 		}
 		SearchEmbarque();
 	}else{
-		async function embark(id){
-			const {data} = await axios.get(url+`/point/${id}/list`)
+		async function embark(){
+			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
+
+			const {data} = await axios.get(url+`/point/${idDistrictEmbark}/list`)
 			setEmbark(data);
 		}
-		  embark(id);
+		  embark();
 	}
 	  
   },[search])
