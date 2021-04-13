@@ -13,14 +13,25 @@ import styles from "./styles";
 import { color, textos } from "../../constants";
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import TimePicker from '../TimePicker'
 
 
 const SelectHour = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
+
+  // dados das viagens 
   const [district,setDistrict] = useState();
   const [districtDisembark,setDistrictDisembark] = useState();
   const [pointEmbark,setPointEmbark] = useState();
   const [pointDisembark,setPointDisembark] = useState();
+  const [hours,setHours] = useState([]);
+
+  // horario
+  const [selectedHours, setSelectedHours] = useState(0);
+  const [selectedMinutes, setSelectedMinutes] = useState(0);
+
+
+  
 
   const url='http://192.168.0.125:3005';
 
@@ -60,8 +71,25 @@ const SelectHour = ({ navigation }) => {
 			setPointDisembark(dados);
 		}
 		PointDisembark();
+
+		async function Hours(){
+			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
+
+			const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark')
+			const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict')
+			const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
+			const {data} = await axios.get(url+`/trip/${idDistrictEmbark}/${idDisembarkDistrict}/list
+			`);
+      console.log('-------------------Viagens---------------------------')
+      console.log(data);
+      setHours(data);
+
+		}
+    Hours();
 		
 	}, [])
+
+	
 
 	
   return (
@@ -108,52 +136,25 @@ const SelectHour = ({ navigation }) => {
           </View>
         </View>
       </View>
-
       <View style={[styles.containerHours, { marginTop: 50 }]}>
-        <TouchableOpacity>
-          <View style={styles.buttonHour}>
-            <Text style={styles.buttonHourText}>09:30</Text>
-          </View>
-        </TouchableOpacity>
 
+      {hours.map((item)=>(
         <TouchableOpacity>
-          <View style={styles.buttonHour}>
-            <Text style={styles.buttonHourText}>11:30</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <View style={styles.buttonHour}>
-            <Text style={styles.buttonHourText}>13:30</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.plusView}>
-        <View>
-          <Text style={styles.plusText}>+</Text>
+        <View style={styles.buttonHour}>
+          <Text style={styles.buttonHourText}>{item.time}</Text>
         </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      ))}
 
-      <View style={styles.containerHours2}>
-        <TouchableOpacity>
-          <View style={styles.buttonHour}>
-            <Text style={styles.buttonHourText}>15:30</Text>
-          </View>
-        </TouchableOpacity>
+       
 
-        <TouchableOpacity>
-          <View style={styles.buttonHour}>
-            <Text style={styles.buttonHourText}>16:00</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View style={styles.buttonHour}>
-            <Text style={styles.buttonHourText}>20:30</Text>
-          </View>
-        </TouchableOpacity>
+     
       </View>
+
+    <TimePicker/>
+     
       <View style={styles.viewButtonConfirm}>
+	 
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("CreateGroupe")}
