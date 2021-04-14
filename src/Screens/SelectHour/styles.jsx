@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
 
   viewButtonConfirm: {
-    marginTop: hp("10%"),
+    marginTop: hp("0%"),
     alignSelf: "center",
   },
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     color: color.gray,
     fontSize: 18,
-    marginTop: hp("1%"),
+    marginTop: hp("-30%"),
   },
   TextButton: {
     textAlign: "center",

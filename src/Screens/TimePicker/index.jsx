@@ -1,64 +1,59 @@
-import React, { useState,useEffect } from "react";
-import {
-  View,
-  Text,
-  StatusBar,
-  Keyboard,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-  Button, 
-  Platform
-} from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import styles from  './styles'
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Text, Pressable, View,TouchableOpacity } from "react-native";
+import styles from './styles';
 
+const TimePicker = () => {
+  const [modalVisible, setModalVisible] = useState(false);
 
-const TimePicker = ({ navigation }) => {
-	const [date, setDate] = useState(new Date(1598051730000));
-	const [mode, setMode] = useState('date');
-	const [show, setShow] = useState(false);
-  
-	const onChange = (event, selectedDate) => {
-	  const currentDate = selectedDate || date;
-	  setShow(Platform.OS === 'ios');
-	  setDate(currentDate);
-	  console.log(date);
-	};
-  
-	const showMode = (currentMode) => {
-	  setShow(true);
-	  setMode(currentMode);
-	};
-  
-	const showDatepicker = () => {
-	  showMode('date');
-	};
-  
-	const showTimepicker = () => {
-	  showMode('time');
-	};
-	
-	return (
-		<View>
-		   <TouchableOpacity onPress={showTimepicker} style={styles.plusView}>
+  function createTrip(horas){
+
+  }
+
+  const horas = ['11:00','14:00','13:00','20:00']
+  return (
+    <View style={styles.centeredView}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+		  {horas.map((item)=>(
+
+			  <TouchableOpacity onPress={createTrip(item)} style={styles.hours}>
+            		<Text style={styles.modalText}>{item}</Text>
+
+			  </TouchableOpacity>
+					
+					))}
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+
+				
+              <Text style={styles.textStyle}>confirmar</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+	  <TouchableOpacity  onPress={() => setModalVisible(true)}  style={styles.plusView}>
         <View>
           <Text style={styles.plusText}>+</Text>
         </View>
       </TouchableOpacity>
-
-		  {show && (
-			<DateTimePicker
-			MinuteInterval={10} 
-			  testID="dateTimePicker"
-			  value={date}
-			  mode={mode}
-			  is24Hour={true}
-			  display="default"
-			  onChange={onChange}
-			/>
-		  )}
-		</View>
-	  );
+     
+     
+        <Text style={styles.textStyle}>+</Text>
+    </View>
+  );
 };
+
+
 
 export default TimePicker;

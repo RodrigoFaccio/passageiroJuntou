@@ -92,6 +92,8 @@ const SelectHour = ({ navigation }) => {
 	
 
 	
+
+	
   return (
     <View style={styles.container}>
 
@@ -139,7 +141,7 @@ const SelectHour = ({ navigation }) => {
       <View style={[styles.containerHours, { marginTop: 50 }]}>
 
       {hours.map((item)=>(
-        <TouchableOpacity>
+        <TouchableOpacity key={item.id}>
         <View style={styles.buttonHour}>
           <Text style={styles.buttonHourText}>{item.time}</Text>
         </View>
@@ -150,9 +152,9 @@ const SelectHour = ({ navigation }) => {
 
      
       </View>
+	  <TimePicker/>
 
-    <TimePicker/>
-     
+	  
       <View style={styles.viewButtonConfirm}>
 	 
         <TouchableOpacity
