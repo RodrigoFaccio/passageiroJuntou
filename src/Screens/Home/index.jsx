@@ -16,16 +16,17 @@ import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-community/async-storage';
 
+import api   from  '../../api.js';
+
 
 const Home = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [checked, setChecked] = useState(false);
   const [data,setData] = useState([]);
-  const url='http://192.168.0.125:3005'
   useEffect(()=>{
     async function Search(search){
       if(search){
-        const response = await axios.get(url+`/bairro/${search}/pesquisa`);
+        const response = await api.get(`/bairro/${search}/pesquisa`);
         setData(response.data);
       }else{
         setData([])

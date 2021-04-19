@@ -16,6 +16,8 @@ import axios from 'axios';
 import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-community/async-storage';
+import api   from  '../../api.js';
+
 
 const DisembarkDistrict = ({ navigation,route }) => {
   const [checked, setChecked] = useState(false);
@@ -28,15 +30,15 @@ const DisembarkDistrict = ({ navigation,route }) => {
 		const dominate =await AsyncStorage.getItem('@juntouApp:dominante');
 		if(dominate==1){
 			//Bairro dominate então mostrar bairros secundários
-			const {data} = await axios.get(url+`/bairro/n/like/noDominante`)
+			const {data} = await api.get(`/bairro/n/like/noDominante`)
 			setDistrictDisembark(data);
 			
 		}else{
-			const {data} = await axios.get(url+`/bairro/n/like/dominante`)
+			const {data} = await api.get(`/bairro/n/like/dominante`)
 			setDistrictDisembark(data);
 		}
 	}	  
-	  DistrictDisembark()
+	  DistrictDisembark();
 
   },[search])
 

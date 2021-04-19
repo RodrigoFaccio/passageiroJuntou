@@ -16,6 +16,8 @@ import axios from 'axios';
 import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-community/async-storage';
+import api   from  '../../api.js';
+
 
 const Embark = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
@@ -29,7 +31,7 @@ const Embark = ({ navigation }) => {
 	if(search){
 		async function SearchEmbarque(){
 			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
-			const {data} = await axios.get(url+`/embarque/${idDistrictEmbark}/${search}/pesquisa`)
+			const {data} = await api.get(`/embarque/${idDistrictEmbark}/${search}/pesquisa`)
 			setEmbark(data);
 			console.log("----------------")
 		}
@@ -38,7 +40,7 @@ const Embark = ({ navigation }) => {
 		async function embark(){
 			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
 
-			const {data} = await axios.get(url+`/point/${idDistrictEmbark}/list`)
+			const {data} = await api.get(`/point/${idDistrictEmbark}/list`)
 			setEmbark(data);
 		}
 		  embark();

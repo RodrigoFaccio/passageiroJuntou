@@ -76,12 +76,11 @@ const styles = StyleSheet.create({
   buttonHour: {
     backgroundColor: "#3A373E",
     height: 45,
-    width: wp("90%"),
+    width: wp("80%"),
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
 	marginTop:10,
-	marginLeft:-wp("5%"),
   },
 
   buttonHourText: {
@@ -128,7 +127,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     color: color.gray,
     fontSize: 18,
-    marginTop: hp("-30%"),
   },
   TextButton: {
     textAlign: "center",
@@ -136,6 +134,56 @@ const styles = StyleSheet.create({
     color: color.white,
     fontFamily: "risque",
   },
+
+  scrollviewhour:{
+	marginTop: 50,
+	marginLeft:wp("10%"),
+	width:wp("95%"),borderRadius:20,
+	height:10
+},
+centeredView: {
+	flex: 1,
+	justifyContent: "center",
+	alignItems: "center",
+	marginTop: -100
+  },
+	modalView: {
+	margin: 20,
+	backgroundColor: "white",
+	borderRadius: 20,
+	padding: 35,
+	alignItems: "center",
+	shadowColor: "#000",
+	shadowOffset: {
+	width: 0,
+	height: 2
+	},
+	shadowOpacity: 0.25,
+	shadowRadius: 4,
+	elevation: 5,
+	width:400,
+	},
+	
+	  buttonOpen: {
+		backgroundColor: "#F194FF",
+	  },
+	  buttonClose: {
+		backgroundColor: color.button,
+	  },
+	  textStyle: {
+		color: "white",
+		fontWeight: "bold",
+		textAlign: "center",
+		fontSize:15
+	  },
+	  modalText: {
+		marginBottom: 15,
+		textAlign: "center",
+		fontSize:20,
+		padding:2,
+		marginTop:10
+	
+	  },
 });
 
 export default styles;

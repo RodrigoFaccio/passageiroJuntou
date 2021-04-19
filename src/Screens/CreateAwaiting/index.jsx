@@ -14,7 +14,6 @@ import { color, textos } from "../../constants";
 const CreateAwaiting = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Header />
 
       <View>
         <Text style={styles.title}>{textos.quase}</Text>

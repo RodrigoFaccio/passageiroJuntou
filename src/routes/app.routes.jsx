@@ -6,6 +6,7 @@ import Embark from '../Screens/Embark';
 import DisembarkDistrict from '../Screens/DisembarkDistrict';
 import SelectHour from '../Screens/SelectHour';
 import DisembarkPoint from '../Screens/DisembarkPoint';
+import CreateAwaiting from '../Screens/CreateAwaiting';
 
 
 
@@ -120,6 +121,24 @@ const AppRoutes = ()=>{
               })}
             />
 			<App.Screen name="DisembarkPoint" component={DisembarkPoint}options={{title:'Embarque'}}
+            options={({ navigation }) => ({
+                title:'Ponto do desembarque',
+                    headerTitleAlign:'center',
+                    headerTitleStyle:{
+                        color:'white',
+                        
+                        
+                    },
+                headerLeft: () => (
+                  <LogoLeftE  />
+                ),
+                headerRight: () => (
+                    <LogoRightE  />
+                  ),
+              })}
+            />
+
+<App.Screen name="CreateAwaiting" component={CreateAwaiting}options={{title:'Juntando'}}
             options={({ navigation }) => ({
                 title:'Ponto do desembarque',
                     headerTitleAlign:'center',

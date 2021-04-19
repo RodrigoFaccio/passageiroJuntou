@@ -12,10 +12,11 @@ import { SearchBar, CheckBox } from "react-native-elements";
 import Header from "../../Components/HeaderHome";
 import styles from "./styles";
 import { color, textos } from "../../constants";
-import axios from 'axios';
 import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-community/async-storage';
+import api   from  '../../api.js';
+
 
 const PointDisembark = ({ navigation,route }) => {
   const [checked, setChecked] = useState(false);
@@ -29,7 +30,7 @@ const PointDisembark = ({ navigation,route }) => {
 		async function SearchEmbarque(){
 		const idDisembarkDistrict =await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict');
 
-			const {data} = await axios.get(url+`/point/${idDisembarkDistrict}/list`)
+			const {data} = await api.get(`/point/${idDisembarkDistrict}/list`)
 			setEmbark(data);
 			console.log("----------------")
 		}
