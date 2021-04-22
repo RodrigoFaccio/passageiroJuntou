@@ -74,16 +74,7 @@ const styles = StyleSheet.create({
   },
 
   buttonHour: {
-    backgroundColor: "#66636b",
-    height: 45,
-    width: wp("80%"),
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-	marginTop:10,
-  },
-  buttonHourSelected: {
-    backgroundColor: "#2a282c",
+    backgroundColor: "#3A373E",
     height: 45,
     width: wp("80%"),
     borderRadius: 12,

@@ -35,9 +35,21 @@ const Home = ({ navigation }) => {
     }
     Search(search);
 
-  },[search])
+	async function checkTrip(){
+		const idTrip = await AsyncStorage.getItem('@juntouApp:idTrip');
+
+		if(idTrip){
+			navigation.navigate("CreateAwaiting");
+
+		}
+
+	}
+
+	
+  },[search]);
 
   
+
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

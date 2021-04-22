@@ -55,8 +55,20 @@ const styles = StyleSheet.create({
 	marginTop:10
 
   },
+  modalTextSelected: {
+    marginBottom: 15,
+    textAlign: "center",
+	fontSize:20,
+	padding:2,
+	marginTop:10,
+	backgroundColor:"#eee8e8",
+	width:'100%',
+	borderRadius:16,
+	height:40
+
+  },
   plusView: {
-    marginTop: 20,
+    marginTop: 35,
     alignSelf: "center",
   },
   plusText: {
@@ -75,6 +87,19 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
 	width:wp("60%"),
+  },
+  hoursSelected:{
+	alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 1,
+	width:wp("60%"),
+	backgroundColor:"#eee2e2"
   }
 });
 

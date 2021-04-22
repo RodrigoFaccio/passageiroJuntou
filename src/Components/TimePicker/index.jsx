@@ -5,30 +5,55 @@ import api from '../../api';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-const TimePicker = ({horasEx,dataTrip}) => {
+const TimePicker = ({horasEx,dataTrip,navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [aviso,setAviso] = useState('');
+  const [hours,setHours] = useState('');
+  const [selected,setSelected] = useState('');
+
 
   async function createTrip(horas){
-	const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark');
-	const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict');
-	const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark');
-	const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
 
-
-
-	const {data} = await api.post(`/trip/${idDistrictEmbark}/${idPointEmbark}/${idDisembarkDistrict}/${idPointDisembark}/1/create`,{
-		"time":horas
-	});
-	console.log(data);
-	if(data=='viagem já existe'){
-		setAviso(data);
+	if(selected){
+		const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark');
+		const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict');
+		const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark');
+		const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
+	
+	
+	
+		const {data} = await api.post(`/trip/${idDistrictEmbark}/${idPointEmbark}/${idDisembarkDistrict}/${idPointDisembark}/1/create`,{
+			"time":horas
+		});
+		console.log(data);
+		if(data=='viagem já existe'){
+			setAviso(data);
+	
+			setInterval(() => {
+			setAviso('');
+				
+			}, 2000);
+		}else{
+			setModalVisible(false);
+			await AsyncStorage.setItem('@juntouApp:idTrip',JSON.stringify(data.id));
+			
+			navigation.navigate("CreateAwaiting");
+	
+		}
+	}else{
+		setAviso('Selecione um horário');
 
 		setInterval(() => {
 		setAviso('');
 			
 		}, 2000);
 	}
+	
+
+}
+function confirmTrip(time){
+	setSelected(time);
+	console.log(time)
 
 }
 
@@ -44,7 +69,6 @@ const TimePicker = ({horasEx,dataTrip}) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
@@ -54,15 +78,15 @@ const TimePicker = ({horasEx,dataTrip}) => {
 
 		  {horas.map((item)=>(
 
-			  <TouchableOpacity key={item} onPress={()=>{createTrip(item)}} style={styles.hours}>
-            		<Text  style={styles.modalText}>{item}</Text>
+			  <TouchableOpacity key={item} onPress={()=>{confirmTrip(item)}} style={styles.hours}>
+            		<Text  style={[selected==item?styles.modalTextSelected:styles.modalText]}>{item}</Text>
 
 			  </TouchableOpacity>
 					
 					))}
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => createTrip(selected) }
             >
 
 				
@@ -79,7 +103,13 @@ const TimePicker = ({horasEx,dataTrip}) => {
      
      
         <Text style={styles.textStyle}>+</Text>
+
+		
     </View>
+
+	// modal para confirmar as horas 
+
+	
   );
 };
 
