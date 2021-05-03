@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import {
   View,
   Text,
@@ -14,15 +14,32 @@ import { color, textos } from "../../constants";
 import axios from 'axios';
 import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
+import AuthContext, { AuthProvider } from '../../context/auth';
+
 import AsyncStorage from '@react-native-community/async-storage';
+
 
 import api   from  '../../api.js';
 
 
+
 const Home = ({ navigation }) => {
+const { signed, user,signIn,signOut } = useContext(AuthContext);
+
   const [search, setSearch] = useState("");
   const [checked, setChecked] = useState(false);
   const [data,setData] = useState([]);
+  const [email,setEmail] = useState([]);
+  console.log(user.email)
+
+
+  
+
+	function sair(){
+
+		console.log('ola')
+		return signOut();
+	}
   useEffect(()=>{
     async function Search(search){
       if(search){
@@ -32,17 +49,19 @@ const Home = ({ navigation }) => {
       }else{
         setData([])
       }
-      
     }
     Search(search);
 
 	async function checkTrip(){
 		const idTrip = await AsyncStorage.getItem('@juntouApp:idTrip');
+		const userEmail = await AsyncStorage.getItem('@juntouApp:email');
+		setEmail(userEmail)
 
-		if(idTrip){
-			navigation.navigate("CreateAwaiting");
 
-		}
+		// if(idTrip){
+		// 	navigation.navigate("CreateAwaiting");
+
+		// }
 
 	}
 	//checkTrip();
@@ -78,7 +97,14 @@ const Home = ({ navigation }) => {
           ))}
         </View>
         </ScrollView>
-        
+
+		<TouchableOpacity onPress={sair}>
+			<Text>Sair</Text>
+		</TouchableOpacity>
+		
+
+		
+		
        
 
           

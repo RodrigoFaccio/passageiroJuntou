@@ -26,7 +26,7 @@ const TimePicker = ({horasEx,dataTrip,navigation}) => {
 			"time":horas
 		});
 		console.log(data);
-		if(data=='viagem já existe'){
+		if(data=='Viagem já existe'){
 			setAviso(data);
 	
 			setInterval(() => {

@@ -9,39 +9,68 @@ import {
   Text,
   StatusBar,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import styles from "./styles";
 import { textos } from "../../constants";
 import axios from 'axios';
-import {useAuth} from '../../context/AuthContext';
 import api from '../../api';
+import AuthContext, { AuthProvider } from '../../context/auth';
+import * as Animatable from 'react-native-animatable';
+import { KeyboardAvoidingView } from "react-native";
+
+
 
 const Login = ({ navigation }) => {
  
 
   const [email, setEmail] = useState("rodrigoP@gmail.com");
   const [password, setPassword] = useState("123456");
-  const {signIn,user} = useAuth();
-  console.log(user);
+  const { signed, user,signIn } = useContext(AuthContext);
+  const [errorMessage,setErrorMessage] = useState('');
+
+
 
 
   
 
   async function handleLogin() {
-   const response  = await api.post('/passageiro/login',{
-     email,
-     password
-   });
-   signIn({
-     email:response.data.email,
-     token:response.data.token
-   });
+	console.log('das')
+
+		try{
+			const {data}  = await api.post('/passageiro/login',{
+				email,
+				password
+			  });
+			  console.log(data);
+			  signIn({
+			
+				token:data.token,
+				id:data.id,
+				email:data.email
+			})
+		}catch(err){
+			console.log(err);
+			setErrorMessage('E-mail ou senha não existem');
+
+			
+		}
+		
+		 
+			 
+		  
+		  
+		 
+
+   
+
 
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+   <SafeAreaView style={styles.Keycontainer}>
+		<KeyboardAvoidingView  style={styles.Keycontainer}
+                behavior="height">
         <StatusBar barStyle="light-content" />
         <View style={styles.viewLogo}>
           <Image
@@ -49,9 +78,15 @@ const Login = ({ navigation }) => {
             style={styles.Logo}
           />
         </View>
+		
 
-        <View>
           <View style={styles.viewInput}>
+			  <View style={{justifyContent:'center',alignItems:'center'}}>
+			  <Animatable.View duration={500} animation="fadeInLeft">
+				<Text style={styles.errorMessage}>{errorMessage}</Text>
+			</Animatable.View>
+			  </View>
+		  
             <TextInput
               placeholder={textos.email}
               style={styles.input}
@@ -59,7 +94,10 @@ const Login = ({ navigation }) => {
               autoCapitalize="none"
               onChangeText={(email) => setEmail(email)}
               value={email}
+			  
+			  
             />
+			
             <TextInput
               placeholder={textos.senha}
               style={styles.input}
@@ -68,10 +106,11 @@ const Login = ({ navigation }) => {
               onChangeText={(pass) => setPassword(pass)}
               value={password}
             />
+			
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleLogin()}
+              onPress={handleLogin}
             >
               <Text style={styles.TextButton}>{textos.entrar}</Text>
             </TouchableOpacity>
@@ -85,9 +124,8 @@ const Login = ({ navigation }) => {
               <Text style={styles.recuperar}>{textos.recuperar}</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+	  </KeyboardAvoidingView>
+	  </SafeAreaView>
   );
 };
 

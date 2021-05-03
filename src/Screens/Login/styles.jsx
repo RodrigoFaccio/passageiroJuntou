@@ -11,16 +11,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white,
   },
+  Keycontainer:{
+	flex: 1,
+	width: '100%',
+	alignItems: 'center',
+	justifyContent: 'space-around',
+  },
   viewLogo: {
-    marginTop: hp("20%"),
     alignSelf: "center",
   },
   Logo: {
+	  marginTop:10,
     width: wp("55%"),
     height: 60,
   },
   viewInput: {
-    marginTop: hp("2%"),
+    marginTop: hp("-15%"),
     alignSelf: "center",
   },
   input: {
@@ -63,7 +69,7 @@ const styles = StyleSheet.create({
     fontFamily: "risque",
   },
   registerView: {
-    marginTop: hp("2%"),
+    marginTop: hp("-15%"),
     alignSelf: "center",
     flexDirection: "row",
     width: wp("85"),
@@ -81,6 +87,11 @@ const styles = StyleSheet.create({
     textDecorationColor: color.white,
     textDecorationLine: "underline",
   },
+  errorMessage:{
+	fontSize:17,
+	color:'red'
+
+  }
 });
 
 export default styles;
