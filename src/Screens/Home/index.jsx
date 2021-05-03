@@ -28,6 +28,7 @@ const Home = ({ navigation }) => {
       if(search){
         const response = await api.get(`/bairro/${search}/pesquisa`);
         setData(response.data);
+		console.log(response.data);
       }else{
         setData([])
       }
@@ -44,6 +45,7 @@ const Home = ({ navigation }) => {
 		}
 
 	}
+	//checkTrip();
 
 	
   },[search]);

@@ -50,7 +50,6 @@ const SelectHour = ({ navigation }) => {
 
   
 
-  const url='http://192.168.0.125:3005';
 
 	useEffect(() => {
 		//Buscar Nome do bairro
@@ -85,18 +84,23 @@ const SelectHour = ({ navigation }) => {
 			const {data} = await api.get(`/point/${idPointDisembark}/info`)
 			
 			const dados = data[0].name
+
 			setPointDisembark(dados);
 		}
 		PointDisembark();
 
 		async function Hours(){
+
 			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark');
+			console.log(idDistrictEmbark);
+			
 			const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark')
 			const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict')
 			const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
 			const {data} = await api.get(`/trip/${idDistrictEmbark}/${idDisembarkDistrict}/list`);
-			console.log('-------------------Viagens---------------------------')
+
 			setHours(data);
+
 
 			
 
@@ -106,7 +110,6 @@ const SelectHour = ({ navigation }) => {
 	
 
 	
-	console.log(details)
 		
 	}, [])
 		async function addTrip(hora,idTrip){
@@ -124,45 +127,39 @@ const SelectHour = ({ navigation }) => {
 			
 		}
 		async function confirmAddTrip(){
+			console.log(idTrip);
 
-			if(hoursTrip){
-				const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark');
-				const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict');
-				const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark');
-				const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark');
+
+			const {data} = await api.post(`/trip/${hoursSelected}/1/createExist`);
+
+			navigation.navigate("CreateAwaiting");
+
+			 await AsyncStorage.setItem('@juntouApp:idTrip',JSON.stringify(idTrip));
+		}
+
+			
+				
 				
 	
+		
 	
 	
-				const {data} = await api.post(`/trip/${idDistrictEmbark}/${idPointEmbark}/${idDisembarkDistrict}/${idPointDisembark}/1/createExist`,{
-					"time":hoursTrip
-				});
-				console.log(data);
-				setModalVisible(false);
-	
-				navigation.navigate("CreateAwaiting");
-	
-				 await AsyncStorage.setItem('@juntouApp:idTrip',JSON.stringify(idTrip));
-			}else{
-				setWarning('Horário nao selecionando');
-				setInterval(() => {
-					setWarning('');
-				}, 2000);
-			}
+			
+				
+		
 			
 
-		}
+		
 		const [hoursSelected,setHoursSelected] = useState(1)
 
-		function handleSelected(id,hoursTrip){
+		function handleSelected(id){
 			setHoursSelected(id);
-			console.log(hoursTrip);
-			setHoursTrip(hoursTrip)
 
 		
 			
 
 		}
+
 	
 
 	
@@ -218,7 +215,7 @@ const SelectHour = ({ navigation }) => {
 	
 	  
       {hours.map((item)=>(
-        	<TouchableOpacity onPress={()=>handleSelected(item.id,item.time)} key={item.id}>
+        	<TouchableOpacity onPress={()=>handleSelected(item.id)} key={item.id}>
         		<View style={[hoursSelected==item.id?styles.buttonHourSelected:styles.buttonHour]}>
           			<Text style={styles.buttonHourText}>{item.time}</Text>
         		</View>

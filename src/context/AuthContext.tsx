@@ -50,14 +50,7 @@ interface AuthContextData{
             {children}
         </AuthContext.Provider>
     );
-    function useAuth(): AuthContextData {
-        const context = useContext(AuthContext);
-        if(!context){
-            throw new Error('Erro No authContext');
-        }
-        return context;
-
-    }
+   
 };
 function useAuth(): AuthContextData {
     const context = useContext(AuthContext);

@@ -45,6 +45,7 @@ const DisembarkDistrict = ({ navigation,route }) => {
   async function saveDisembarkDistrict(idDisembarkDistrict){
 	  
 	await AsyncStorage.setItem('@juntouApp:idDisembarkDistrict',JSON.stringify(idDisembarkDistrict))
+
 	navigation.navigate("DisembarkPoint");
 	
 	

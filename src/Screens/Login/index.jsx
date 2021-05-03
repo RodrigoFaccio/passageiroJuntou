@@ -14,11 +14,12 @@ import styles from "./styles";
 import { textos } from "../../constants";
 import axios from 'axios';
 import {useAuth} from '../../context/AuthContext';
+import api from '../../api';
 
 const Login = ({ navigation }) => {
- const url = 'http://localhost:3005';
+ 
 
-  const [email, setEmail] = useState("rodrigopassageiro@gmail.com");
+  const [email, setEmail] = useState("rodrigoP@gmail.com");
   const [password, setPassword] = useState("123456");
   const {signIn,user} = useAuth();
   console.log(user);
@@ -27,7 +28,7 @@ const Login = ({ navigation }) => {
   
 
   async function handleLogin() {
-   const response  = await axios.post(url+'/passageiro/login',{
+   const response  = await api.post('/passageiro/login',{
      email,
      password
    });
