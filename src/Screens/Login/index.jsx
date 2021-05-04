@@ -69,8 +69,10 @@ const Login = ({ navigation }) => {
 
   return (
    <SafeAreaView style={styles.Keycontainer}>
-		<KeyboardAvoidingView  style={styles.Keycontainer}
-                behavior="height">
+	   <View style={styles.container}>
+
+	   </View>
+		
         <StatusBar barStyle="light-content" />
         <View style={styles.viewLogo}>
           <Image
@@ -124,7 +126,6 @@ const Login = ({ navigation }) => {
               <Text style={styles.recuperar}>{textos.recuperar}</Text>
             </TouchableOpacity>
           </View>
-	  </KeyboardAvoidingView>
 	  </SafeAreaView>
   );
 };

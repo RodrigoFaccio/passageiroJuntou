@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 
   },
   plusView: {
-    marginTop: 35,
+    marginTop: 90,
     alignSelf: "center",
   },
   plusText: {
