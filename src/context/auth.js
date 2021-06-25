@@ -1,6 +1,11 @@
 
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import {
+  View,
+  ActivityIndicator
+ 
+} from "react-native";
 
 const AuthContext = createContext({ signed: false, user: {} });
 
@@ -11,14 +16,13 @@ export const AuthProvider = ({ children }) => {
 
      useEffect(() => {
         async function loadStorageData() {
-            const storageToken = await AsyncStorage.getItem('@Juntou:token');
-            const storageEmail = await AsyncStorage.getItem('@Juntou:token');
-            const storageId = await AsyncStorage.getItem('@Juntou:token');
+            
+            const storageUser = await AsyncStorage.getItem('@Juntou:user');
 
-            if ( storageToken && storageEmail && storageId) {
-                setUser(JSON.parse(storageToken),JSON.parse(storageEmail),JSON.parse(storageId));
+            if ( storageUser) {
+                setUser(JSON.parse(storageUser));
                 setLoading(false);
-            } else if ( !storageToken) {
+            } else if ( !storageUser) {
                 setLoading(false);
             }
         }
@@ -43,6 +47,14 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
         });
     }
+	if(loading){
+    return(
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large" color="#666" />
+
+        </View>
+    );
+}
 
     return (
         <AuthContext.Provider value={{ signed: !! user, user, signIn, signOut, loading }} >

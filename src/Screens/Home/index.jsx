@@ -6,6 +6,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { SearchBar, CheckBox } from "react-native-elements";
 import Header from "../../Components/HeaderHome";
@@ -16,6 +17,9 @@ import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AuthContext, { AuthProvider } from '../../context/auth';
 
+	
+
+
 import AsyncStorage from '@react-native-community/async-storage';
 
 
@@ -24,20 +28,26 @@ import api   from  '../../api.js';
 
 
 const Home = ({ navigation }) => {
+	
 const { signed, user,signIn,signOut } = useContext(AuthContext);
 
   const [search, setSearch] = useState("");
   const [checked, setChecked] = useState(false);
   const [data,setData] = useState([]);
   const [email,setEmail] = useState([]);
-  console.log(user.email)
+  const [userr,setUserr]=useState();
+  const [idTrip,setIdTrip]=useState();
+
+  const [loading,setLoading]=useState(true);
+
+  //console.log(user.email)
 
 
   
 
 	function sair(){
 
-		console.log('ola')
+		//console.log('ola')
 		return signOut();
 	}
   useEffect(()=>{
@@ -45,31 +55,60 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
       if(search){
         const response = await api.get(`/bairro/${search}/pesquisa`);
         setData(response.data);
-		console.log(response.data);
+		//console.log(response.data);
       }else{
         setData([])
       }
     }
     Search(search);
-
 	async function checkTrip(){
-		const idTrip = await AsyncStorage.getItem('@juntouApp:idTrip');
-		const userEmail = await AsyncStorage.getItem('@juntouApp:email');
-		setEmail(userEmail)
+		//VERIFICAR SE EXISTE UMA VIAGEM 
+		const {data} = await api.get(`/trip/${user.id}/checkTripUser`);
+		setIdTrip(data);
+		
+
+		
+		
 
 
-		// if(idTrip){
-		// 	navigation.navigate("CreateAwaiting");
 
-		// }
+		if(data!='Não a usuarios'){
+		//VERIFICAR O STATUS DA VIAGEM
+
+			const {data} = await api.get(`/trip/${idTrip.id_trip}/checkTripStatus`);
+			if(data.status==1){
+				navigation.navigate("Confirmed");
+				setLoading(false)
+
+			}else{
+				navigation.navigate("CreateAwaiting");
+				setLoading(false)
+
+			}
+			
+		}else{
+				setLoading(false)
+
+		}
+		setLoading(false);
 
 	}
-	//checkTrip();
+	checkTrip();
+
+	
 
 	
   },[search]);
-
   
+
+  if(loading){
+    return(
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large" color="#666" />
+
+        </View>
+    );
+}
 
 
   return (

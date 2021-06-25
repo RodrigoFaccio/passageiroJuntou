@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,19 +7,70 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import Header from "../../Components/HeaderConfirmed";
 import styles from "./styles";
 import { color, textos } from "../../constants";
 import { Feather } from "@expo/vector-icons";
+import api from "../../api";
+
 
 const Confirmed = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
+  const [userDrive,setUserDrive] = useState();
+  const [loading,setLoading]=useState(true);
+  const [tripDate,setTripDate] = useState();
+  const [district,setDistrict] = useState();
+  const [districtDisembark,setDistrictDisembark] = useState();
+
+
+  useEffect(()=>{
+	  async function getInfoDriver(){
+			const response = await api.get(`/trip/4/checkTripStatus`);
+			setTripDate(response.data)
+
+			const {data} = await api.get(`/motorista/${response.data.id_user}/list`);
+			setUserDrive(data);
+			console.log(response.data);
+			setLoading(false)
+
+
+
+
+
+			
+	  }
+	  getInfoDriver();
+	  async function DistrictEmbark(){
+			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
+			const {data} = await api.get(`/bairro/${idDistrictEmbark}/info`)
+			const dados = data[0].name
+			setDistrict(dados);
+		}
+		DistrictEmbark();
+		async function DistrictDisembark(){
+			//buscar nome do desembarque
+			const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict')
+			const {data} = await api.get(`/bairro/${idDisembarkDistrict}/info`);
+			const dados = data[0].name;
+			setDistrictDisembark(dados);
+		}
+		DistrictDisembark();
+
+  },[])
+  if(loading){
+    return(
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large" color="#666" />
+
+        </View>
+    );
+}
 
   return (
     <View style={styles.container}>
-      <Header />
 
       <View style={styles.valueView}>
         <Text style={styles.value}>R$5,00</Text>
@@ -28,12 +79,12 @@ const Confirmed = ({ navigation }) => {
       <View style={styles.containerItem}>
         <View style={styles.item}>
           <View style={styles.point} />
-          <Text style={styles.itemText}>Bairro Honório Bicalho</Text>
+          <Text style={styles.itemText}>{district}</Text>
         </View>
 
         <View style={styles.item}>
           <View style={styles.point} />
-          <Text style={styles.itemText}>Bairro Centro de Nova Lima</Text>
+          <Text style={styles.itemText}>{districtDisembark}</Text>
         </View>
       </View>
 
@@ -61,16 +112,16 @@ const Confirmed = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View>
-            <Text style={styles.itemTextContainer}>Gabriel Luciano Silva</Text>
-            <Text style={styles.itemTextContainer}>Fiat Mobi preto</Text>
-            <Text style={styles.itemTextContainer}>GQE-7898</Text>
+            <Text style={styles.itemTextContainer}>{userDrive.name}</Text>
+            <Text style={styles.itemTextContainer}>{userDrive.marca_carro}</Text>
+            <Text style={styles.itemTextContainer}>{userDrive.placa}</Text>
             <TouchableOpacity>
               <Text style={styles.localizationText}>Localização</Text>
             </TouchableOpacity>
           </View>
           <View>
             <View style={styles.numberView}>
-              <Text style={styles.number}>3</Text>
+              <Text style={styles.number}>{tripDate.people}</Text>
             </View>
           </View>
         </View>

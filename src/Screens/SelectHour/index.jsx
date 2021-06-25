@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useContext } from "react";
 import {
   View,
   Text,
@@ -19,12 +19,16 @@ import TimePicker from '../../Components/TimePicker'
 import api from '../../api';
 import { ScrollView } from "react-native-gesture-handler";
 import { widthPercentageToDP } from "react-native-responsive-screen";
-import ConfirmTrip from '../../Components/ConfirmTrip'
+import ConfirmTrip from '../../Components/ConfirmTrip';
+import AuthContext, { AuthProvider } from '../../context/auth';
+
 
 
 
 
 const SelectHour = ({ navigation }) => {
+const { signed, user,signIn,signOut } = useContext(AuthContext);
+
   const [checked, setChecked] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [idTrip,setIdTrip] = useState();
@@ -126,11 +130,13 @@ const SelectHour = ({ navigation }) => {
 			
 			
 		}
+		//Confirmar a viagem
 		async function confirmAddTrip(){
-			console.log(idTrip);
+		
+			
 
 
-			const {data} = await api.post(`/trip/${hoursSelected}/1/createExist`);
+			const {data} = await api.post(`/trip/${hoursSelected}/${user.id}/createExist`);
 
 			navigation.navigate("CreateAwaiting");
 

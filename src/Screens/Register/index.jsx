@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import {
   View,
   Image,
@@ -16,9 +16,15 @@ import { textos } from "../../constants";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as Permissions from "expo-permissions";
+import api from '../../api';
+import AuthContext, { AuthProvider } from '../../context/auth';
+
+
 
 const Register = ({ navigation }) => {
-  const [nome, setNome] = useState("");
+  const { signed, user,signIn } = useContext(AuthContext);
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpass, setConfirmpass] = useState("");
@@ -26,9 +32,13 @@ const Register = ({ navigation }) => {
   const [image, setImage] = useState("");
 
   async function handleRegister() {
-    email == "" || password == ""
-      ? Alert.alert("Insira os dados e tente novamente")
-      : Alert.alert("show");
+	const {data} = await api.post('/passageiro/cadastro',{name,email,password,whatsapp});
+	signIn({
+			
+				token:data.token,
+				id:data.id,
+				email:data.email
+			})
   }
 
   useEffect(() => {
@@ -94,8 +104,8 @@ const Register = ({ navigation }) => {
             <TextInput
               placeholder={textos.nome}
               style={styles.input}
-              onChangeText={(nome) => setNome(nome)}
-              value={nome}
+              onChangeText={(name) => setName(name)}
+              value={name}
             />
             <TextInput
               placeholder={textos.email}

@@ -24,7 +24,7 @@ import { KeyboardAvoidingView } from "react-native";
 const Login = ({ navigation }) => {
  
 
-  const [email, setEmail] = useState("rodrigoP@gmail.com");
+  const [email, setEmail] = useState("rodrigopassageiro@gmail.com");
   const [password, setPassword] = useState("123456");
   const { signed, user,signIn } = useContext(AuthContext);
   const [errorMessage,setErrorMessage] = useState('');

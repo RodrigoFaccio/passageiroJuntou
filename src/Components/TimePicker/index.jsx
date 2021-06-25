@@ -102,7 +102,6 @@ function confirmTrip(time){
       </TouchableOpacity>
      
      
-        <Text style={styles.textStyle}>+</Text>
 
 		
     </View>
