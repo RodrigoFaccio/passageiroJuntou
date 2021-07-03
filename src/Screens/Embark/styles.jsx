@@ -40,7 +40,14 @@ const styles = StyleSheet.create({
 	width:wp("90%"),
 	marginLeft:wp("5%")
 	
-  }
+  },
+
+  textName:{
+    fontSize:20,
+    marginLeft:8,
+    padding:10
+
+  },
   
 });
 

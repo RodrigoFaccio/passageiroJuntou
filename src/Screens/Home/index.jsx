@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 
 import api   from  '../../api.js';
+import ListLocale from "../../Components/ListLocale";
 
 
 
@@ -31,9 +32,11 @@ const Home = ({ navigation }) => {
 	
 const { signed, user,signIn,signOut } = useContext(AuthContext);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [checked, setChecked] = useState(false);
   const [data,setData] = useState([]);
+  const [dataSearch,setDataSearch] = useState([]);
+
   const [email,setEmail] = useState([]);
   const [userr,setUserr]=useState();
   const [idTrip,setIdTrip]=useState();
@@ -50,55 +53,71 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 		//console.log('ola')
 		return signOut();
 	}
+
+	
+
   useEffect(()=>{
+	async function bairrosRequest(){
+		const responseSearch = await api.get(`/bairro/lista`);
+		setData(responseSearch.data)
+		setLoading(false)
+
+
+	  }
+	  bairrosRequest();
+
     async function Search(search){
       if(search){
-        const response = await api.get(`/bairro/${search}/pesquisa`);
-        setData(response.data);
-		//console.log(response.data);
+		console.log(search)
+
+       const newData = await api.get(`/bairro/${search}/pesquisa`)
+		console.log(newData.data)
+
+	   setDataSearch(newData.data)
+        
       }else{
         setData([])
       }
     }
     Search(search);
+	
 	async function checkTrip(){
-		//VERIFICAR SE EXISTE UMA VIAGEM 
 		const {data} = await api.get(`/trip/${user.id}/checkTripUser`);
-		setIdTrip(data);
-		
-
-		
-		
-
-
-
-		if(data!='Não a usuarios'){
-		//VERIFICAR O STATUS DA VIAGEM
-
-			const {data} = await api.get(`/trip/${idTrip.id_trip}/checkTripStatus`);
+		const idTrip = data.id_trip
+		setLoading(false)
+	
+	
+	
+		if(data){
+			const {data} = await api.get(`/trip/${idTrip}/checkTripStatus`);
+			const dados = data
+			console.log(data.status);
 			if(data.status==1){
-				navigation.navigate("Confirmed");
-				setLoading(false)
-
+				navigation.navigate('Confirmed',dados)
 			}else{
-				navigation.navigate("CreateAwaiting");
-				setLoading(false)
-
+				navigation.navigate('CreateAwaiting')
 			}
-			
+			setLoading(false)
+	
 		}else{
-				setLoading(false)
-
+		setLoading(false)
+	
 		}
-		setLoading(false);
-
+	
+		
+	
 	}
 	checkTrip();
+	setLoading(false)
 
 	
 
 	
   },[search]);
+
+
+
+  
   
 
   if(loading){
@@ -129,13 +148,28 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
           />
         </View>
 
-        <ScrollView style={styles.search}  >
-        <View style={styles.search}>
-          {data.map((item)=>(
-            <SearchList item={item} key={item.id}/>
-          ))}
-        </View>
-        </ScrollView>
+		{
+			search==''?
+			(
+				<View>
+				{data.map(item=>{
+					return(
+					<ListLocale key={item.id} item={item}/>
+				)})}
+				 
+			</View>
+			):
+			( 
+				<ScrollView style={styles.search}  >
+				<View style={styles.search}>
+				  {dataSearch.map((item)=>(
+					<SearchList item={item} key={item.id}/>
+				  ))}
+				</View>
+				</ScrollView>)
+		}
+
+        
 
 		<TouchableOpacity onPress={sair}>
 			<Text>Sair</Text>

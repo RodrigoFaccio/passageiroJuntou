@@ -18,13 +18,16 @@ import AsyncStorage from '@react-native-community/async-storage';
  
 
 const SearchList = ({item }) => {
+	
   const navigation = useNavigation();
+
   async function saveBairroEmbark(item){
 	await AsyncStorage.setItem('@juntouApp:dominante',JSON.stringify(item.dominante))
 	await AsyncStorage.setItem('@juntouApp:idDistrictEmbark',JSON.stringify(item.id))
 	
 	navigation.navigate("Embark");
   }
+
   return(
      <View style={styles.container}>
       

@@ -21,9 +21,11 @@ import api   from  '../../api.js';
 
 const DisembarkDistrict = ({ navigation,route }) => {
   const [checked, setChecked] = useState(false);
-  const [search,setSearch] = useState();
+  const [search,setSearch] = useState('');
   const [disembark,setDistrictDisembark] = useState([]);
   const url='http://192.168.0.125:3005';
+  const [data,setData] = useState([]);
+  const [dataSearch,setDataSearch] = useState([]);
 
   useEffect(()=>{
 	  async function DistrictDisembark(){
@@ -31,20 +33,39 @@ const DisembarkDistrict = ({ navigation,route }) => {
 		if(dominate==1){
 			//Bairro dominate então mostrar bairros secundários
 			const {data} = await api.get(`/bairro/n/like/noDominante`)
-			setDistrictDisembark(data);
+			setData(data);
 			
 		}else{
 			const {data} = await api.get(`/bairro/n/like/dominante`)
-			setDistrictDisembark(data);
+			setData(data);
 		}
 	}	  
 	  DistrictDisembark();
+	  async function Search(search){
+		if(search){
+		  //console.log(search)
+		  const dominate =await AsyncStorage.getItem('@juntouApp:dominante');
+		  if(dominate==1){
+			  //Bairro dominate então mostrar bairros secundários
+			  const {data} = await api.get(`/bairro/${search}/like/noDominante`)
+			  setDataSearch(data);
+			  
+		  }else{
+			  const {data} = await api.get(`/bairro/${search}/like/dominante`)
+			  setDataSearch(data);
+		  }
+		  
+		}else{
+		  setData([])
+		}
+	  }
+	  Search(search);
 
   },[search])
 
   async function saveDisembarkDistrict(idDisembarkDistrict){
 	  
-	await AsyncStorage.setItem('@juntouApp:idDisembarkDistrict',JSON.stringify(idDisembarkDistrict))
+	await AsyncStorage.setItem('@juntouApp:idDisembarkDistrict',JSON.stringify(idDisembarkDistrict.id))
 
 	navigation.navigate("DisembarkPoint");
 	
@@ -70,17 +91,35 @@ const DisembarkDistrict = ({ navigation,route }) => {
           />
         </View>
 		<View>
-			<View>
-				{disembark.map(item=>{
+		{
+			search==[]?
+			(
+				<View>
+				{data.map(item=>{
 					return(
-					<TouchableOpacity onPress={()=>{saveDisembarkDistrict(item.id)}} key={item.id} style={styles.ViewNameEmbarque}>
+						<TouchableOpacity onPress={()=>{saveDisembarkDistrict(item)}} key={item.id}  style={styles.ViewNameEmbarque}>
 						
 						<Text style={styles.textNameEmbarque}>{item.name}</Text>
-						<Image style={{width:30,height:30,marginLeft:210,marginTop:-25}} source={require('../../Assets/seta-direita.png')}/>
 					</TouchableOpacity>
 				)})}
 				 
 			</View>
+			):
+			( 
+				<ScrollView style={styles.search}  >
+				<View style={styles.search}>
+				  {dataSearch.map((item)=>(
+					<View key={item.id} style={styles.container}>
+      
+					<TouchableOpacity onPress={() => saveDisembarkDistrict(item)}>
+					  <Text style={styles.textName}>{item.name}</Text>
+
+					</TouchableOpacity>
+			   </View>
+				  ))}
+				</View>
+				</ScrollView>)
+		}
 		</View>
 
        

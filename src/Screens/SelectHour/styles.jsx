@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 
   box: {
     marginTop: hp("3%"),
-    height: 190,
+    height: 120,
     width: wp("90%"),
     borderRadius: 12,
     borderWidth: 1,

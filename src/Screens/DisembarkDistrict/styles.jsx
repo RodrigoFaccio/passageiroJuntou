@@ -18,6 +18,12 @@ const styles = StyleSheet.create({
     alignItems:"center"
 
   },
+  textName:{
+    fontSize:20,
+    marginLeft:8,
+    padding:10
+
+  },
   textEmbark:{
     fontSize:20,
     textTransform:"uppercase"

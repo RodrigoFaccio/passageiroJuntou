@@ -21,6 +21,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { widthPercentageToDP } from "react-native-responsive-screen";
 import ConfirmTrip from '../../Components/ConfirmTrip';
 import AuthContext, { AuthProvider } from '../../context/auth';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -53,9 +54,9 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 
 
   
+  useFocusEffect(
 
-
-	useEffect(() => {
+ React.useCallback(() => {
 		//Buscar Nome do bairro
 		async function DistrictEmbark(){
 			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
@@ -73,12 +74,14 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 		}
 		DistrictDisembark();
 		async function PointEmbark(){
+			console.log('embark')
+
 			//Buscar nome do ponto de embarque
 			const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark')
-			const {data} = await api.get(`/point/${idPointEmbark}/info`)
+			const response = await api.get(`/point/1/info`)
 			
-			const dados = data[0].name
-			setPointEmbark(dados);
+			console.log(response.data)
+			setPointEmbark(response.data[0].name);
 		}
 		PointEmbark();
 
@@ -86,17 +89,18 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 			//Buscar nome do ponto de desembarque
 			const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
 			const {data} = await api.get(`/point/${idPointDisembark}/info`)
+			console.log(data[0].name)
 			
-			const dados = data[0].name
+		
 
-			setPointDisembark(dados);
+			setPointDisembark(data[0].name);
 		}
 		PointDisembark();
 
 		async function Hours(){
 
 			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark');
-			console.log(idDistrictEmbark);
+			//console.log(idDistrictEmbark);
 			
 			const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark')
 			const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict')
@@ -116,31 +120,20 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 	
 		
 	}, [])
-		async function addTrip(hora,idTrip){
-			setHoursTrip(hora);
-			setIdTrip(idTrip);
-			details.hours= hora;
-			details.district=district;
-			details.districtDisembark = districtDisembark;
-			details.pointEmbark = pointEmbark;
-			details.pointDisembark = pointDisembark;
-			setModalVisible(true);
-			setDetalhes(details);
-
-			
-			
-		}
+  )
+		
 		//Confirmar a viagem
 		async function confirmAddTrip(){
 		
-			
+			console.log(hoursSelected)
 
 
 			const {data} = await api.post(`/trip/${hoursSelected}/${user.id}/createExist`);
+			await AsyncStorage.setItem('@juntouApp:idTrip',JSON.stringify(data.id_trip));
+
 
 			navigation.navigate("CreateAwaiting");
 
-			 await AsyncStorage.setItem('@juntouApp:idTrip',JSON.stringify(idTrip));
 		}
 
 			
@@ -192,29 +185,7 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
             <Text style={styles.itemText}>{districtDisembark}</Text>
           </View>
 
-          <View>
-            <CheckBox
-              title={pointEmbark}
-              checked={checked}
-              onPress={() => setChecked(!checked)}
-              checkedColor={color.button}
-              containerStyle={{
-                backgroundColor: "#fff",
-                borderColor: "transparent",
-              }}
-            />
-            <CheckBox
-              title={pointDisembark}
-              checked={checked}
-              onPress={() => setChecked(!checked)}
-              checkedColor={color.button}
-              containerStyle={{
-                backgroundColor: "#fff",
-                borderColor: "transparent",
-                marginTop: -13,
-              }}
-            />
-          </View>
+         
         </View>
       </View>
 	  <ScrollView style={ styles.scrollviewhour}>

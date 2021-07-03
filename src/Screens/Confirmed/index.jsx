@@ -17,7 +17,9 @@ import { Feather } from "@expo/vector-icons";
 import api from "../../api";
 
 
-const Confirmed = ({ navigation }) => {
+const Confirmed = ({ navigation,route }) => {
+
+	const [trip,setTrip] = useState(route.params)
   const [checked, setChecked] = useState(false);
   const [userDrive,setUserDrive] = useState();
   const [loading,setLoading]=useState(true);
@@ -27,39 +29,48 @@ const Confirmed = ({ navigation }) => {
 
 
   useEffect(()=>{
-	  async function getInfoDriver(){
-			const response = await api.get(`/trip/4/checkTripStatus`);
-			setTripDate(response.data)
+	  async function  motorista(){
+		  const {data} = await api.get('/motorista/2/list')
+		  setUserDrive(data)
+		  console.log(userDrive)
+		  setLoading(false)
 
-			const {data} = await api.get(`/motorista/${response.data.id_user}/list`);
-			setUserDrive(data);
-			console.log(response.data);
-			setLoading(false)
+	  }
+	  motorista();
+	  async function DistrictEmbark(){
+		const {data} = await api.get(`/bairro/${trip.id_district_embark}/info`)
+		const dados = data[0].name
+		//console.log(dados);
 
+		setDistrict(dados);
+	  }
 
-
+		  
 
 
 			
-	  }
-	  getInfoDriver();
-	  async function DistrictEmbark(){
-			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
-			const {data} = await api.get(`/bairro/${idDistrictEmbark}/info`)
-			const dados = data[0].name
-			setDistrict(dados);
-		}
+			
 		DistrictEmbark();
 		async function DistrictDisembark(){
 			//buscar nome do desembarque
-			const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict')
-			const {data} = await api.get(`/bairro/${idDisembarkDistrict}/info`);
+			const {data} = await api.get(`/bairro/${trip.id_district_disembark}/info`);
 			const dados = data[0].name;
 			setDistrictDisembark(dados);
 		}
 		DistrictDisembark();
 
   },[])
+  	async function cancelTrip(){
+		console.log('-----====')
+
+		const {data}= await api.get('/trip/13/1/cancel')
+		console.log(data)
+
+		if(data=="Cancelada com sucesso")
+			return navigation.navigate('Home')
+	}
+
+
   if(loading){
     return(
         <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
@@ -121,7 +132,7 @@ const Confirmed = ({ navigation }) => {
           </View>
           <View>
             <View style={styles.numberView}>
-              <Text style={styles.number}>{tripDate.people}</Text>
+              <Text style={styles.number}>{trip.people}</Text>
             </View>
           </View>
         </View>
@@ -130,7 +141,7 @@ const Confirmed = ({ navigation }) => {
       <View style={styles.viewButtonConfirm}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Finished")}
+          onPress={cancelTrip}
         >
           <Text style={styles.TextButton}>{textos.cancelar}</Text>
         </TouchableOpacity>

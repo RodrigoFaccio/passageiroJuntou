@@ -17,40 +17,54 @@ import SearchList from '../Search';
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-community/async-storage';
 import api   from  '../../api.js';
+import ListLocale from "../../Components/ListLocale";
+
 
 
 const Embark = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
-  const [search,setSearch] = useState();
-  const [embarks,setEmbark] = useState([]);
+  const [search,setSearch] = useState('');
+  const [embark,setEmbark] = useState([]);
+  const [data,setData] = useState([]);
+  const [dataSearch,setDataSearch] = useState([]);
+
   
   const url='http://192.168.0.125:3005';
+  
 
   useEffect(()=>{
+	async function bairrosRequest(){
+		const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark');
+		setEmbark(idDistrictEmbark);
+		const {data} = await api.get(`/point/${idDistrictEmbark}/list`)
+		setData(data)
+	  }
+	  bairrosRequest();
+    async function Search(search){
+      if(search){
+		//console.log(search)
 
-	if(search){
-		async function SearchEmbarque(){
-			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
-			const {data} = await api.get(`/embarque/${idDistrictEmbark}/${search}/pesquisa`)
-			setEmbark(data);
-			console.log("----------------")
-		}
-		SearchEmbarque();
-	}else{
-		async function embark(){
-			const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark')
+			const {data} = await api.get(`/point/${search}/${embark}/pesquisa`)
 
-			const {data} = await api.get(`/point/${idDistrictEmbark}/list`)
-			setEmbark(data);
-		}
-		  embark();
-	}
-	  
-  },[search])
+	   setDataSearch(data)
+        
+      }else{
+        setData([])
+      }
+    }
+    Search(search);
+	
+
+	
+
+	
+  },[search]);
+
+
 
   async function saveEmbark(idPointEmbark){
 	  
-	await AsyncStorage.setItem('@juntouApp:idPointEmbark',JSON.stringify(idPointEmbark))
+	await AsyncStorage.setItem('@juntouApp:idPointEmbark',JSON.stringify(idPointEmbark.id))
 	
 	navigation.navigate("DisembarkDistrict");
 	
@@ -75,17 +89,35 @@ const Embark = ({ navigation }) => {
           />
         </View>
 		<View>
-			<View>
-				{embarks.map(item=>{
+		{
+			search==[]?
+			(
+				<View>
+				{data.map(item=>{
 					return(
-					<TouchableOpacity onPress={()=>{saveEmbark(item.id)}} key={item.id} style={styles.ViewNameEmbarque}>
+						<TouchableOpacity onPress={()=>{saveEmbark(item)}} key={item.id}  style={styles.ViewNameEmbarque}>
 						
 						<Text style={styles.textNameEmbarque}>{item.name}</Text>
-						<Image style={{width:30,height:30,marginLeft:210,marginTop:-25}} source={require('../../Assets/seta-direita.png')}/>
 					</TouchableOpacity>
 				)})}
 				 
 			</View>
+			):
+			( 
+				<ScrollView style={styles.search}  >
+				<View style={styles.search}>
+				  {dataSearch.map((item)=>(
+					<View key={item.id} style={styles.container}>
+      
+					<TouchableOpacity onPress={() => saveEmbark(item)}>
+					  <Text style={styles.textName}>{item.name}</Text>
+
+					</TouchableOpacity>
+			   </View>
+				  ))}
+				</View>
+				</ScrollView>)
+		}
 		</View>
 
        

@@ -1,0 +1,6 @@
+Criar botao cancelar
+excluir trip_people e diminuir pessoa na viagem
+
+criar nova lista 
+em todas as telas 
+

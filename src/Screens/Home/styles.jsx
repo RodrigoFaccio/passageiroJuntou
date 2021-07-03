@@ -35,9 +35,21 @@ const styles = StyleSheet.create({
     color: color.white,
     fontFamily: "risque",
   },
-  search:{
-    
-   
+ 
+  textNameEmbarque:{
+	fontSize:20,
+
+	
+  },
+  ViewNameEmbarque:{
+	justifyContent:"center",
+	alignItems:"center",
+	padding:20,
+	borderRadius:20,
+	borderWidth:2,
+	width:wp("90%"),
+	marginLeft:wp("5%")
+	
   }
  
 });
