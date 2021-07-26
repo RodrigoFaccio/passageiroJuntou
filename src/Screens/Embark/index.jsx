@@ -6,7 +6,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import { SearchBar, CheckBox } from "react-native-elements";
 import Header from "../../Components/HeaderHome";
@@ -27,6 +28,8 @@ const Embark = ({ navigation }) => {
   const [embark,setEmbark] = useState([]);
   const [data,setData] = useState([]);
   const [dataSearch,setDataSearch] = useState([]);
+  const [loading,setLoad] = useState(true);
+
 
   
   const url='http://192.168.0.125:3005';
@@ -38,6 +41,7 @@ const Embark = ({ navigation }) => {
 		setEmbark(idDistrictEmbark);
 		const {data} = await api.get(`/point/${idDistrictEmbark}/list`)
 		setData(data)
+		setLoad(false)
 	  }
 	  bairrosRequest();
     async function Search(search){
@@ -68,6 +72,14 @@ const Embark = ({ navigation }) => {
 	
 	navigation.navigate("DisembarkDistrict");
 	
+}
+if(loading){
+    return(
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large" color="#666" />
+
+        </View>
+    );
 }
 
   return (

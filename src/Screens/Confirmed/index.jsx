@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import {
   View,
   Text,
@@ -15,9 +15,13 @@ import styles from "./styles";
 import { color, textos } from "../../constants";
 import { Feather } from "@expo/vector-icons";
 import api from "../../api";
+import AuthContext, { AuthProvider } from '../../context/auth';
+
 
 
 const Confirmed = ({ navigation,route }) => {
+  const { signed, user,signIn } = useContext(AuthContext);
+
 
 	const [trip,setTrip] = useState(route.params)
   const [checked, setChecked] = useState(false);
@@ -63,7 +67,7 @@ const Confirmed = ({ navigation,route }) => {
   	async function cancelTrip(){
 		console.log('-----====')
 
-		const {data}= await api.get('/trip/13/1/cancel')
+		const {data}= await api.get(`/trip/${trip.id}/${user.id}/cancel`)
 		console.log(data)
 
 		if(data=="Cancelada com sucesso")

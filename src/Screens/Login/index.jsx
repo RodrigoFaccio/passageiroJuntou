@@ -26,6 +26,7 @@ const Login = ({ navigation }) => {
 
   const [email, setEmail] = useState("rodrigopassageiro@gmail.com");
   const [password, setPassword] = useState("123456");
+  
   const { signed, user,signIn } = useContext(AuthContext);
   const [errorMessage,setErrorMessage] = useState('');
 
@@ -51,7 +52,7 @@ const Login = ({ navigation }) => {
 			})
 		}catch(err){
 			console.log(err);
-			setErrorMessage('E-mail ou senha não existem');
+			setErrorMessage('E-mail ou senha incorretos');
 
 			
 		}

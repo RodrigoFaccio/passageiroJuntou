@@ -6,7 +6,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import { SearchBar, CheckBox } from "react-native-elements";
 import Header from "../../Components/HeaderHome";
@@ -27,6 +28,7 @@ const Embark = ({ navigation }) => {
   const [disembark,setDisembark] = useState([]);
   const [data,setData] = useState([]);
   const [dataSearch,setDataSearch] = useState([]);
+  const [loading,setLoad] = useState(true);
 
   
   const url='http://192.168.0.125:3005';
@@ -38,6 +40,7 @@ const Embark = ({ navigation }) => {
 		setDisembark(idDisembarkDistrict);
 		const {data} = await api.get(`/point/${idDisembarkDistrict}/list`)
 		setData(data)
+		setLoad(false)
 	  }
 	  bairrosRequest();
     async function Search(search){
@@ -63,11 +66,20 @@ const Embark = ({ navigation }) => {
 
 
   async function saveEmbark(idPointEmbark){
+	  console.log(idPointEmbark.id)
 	  
-	await AsyncStorage.setItem('@juntouApp:idPointEmbark',JSON.stringify(idPointEmbark))
+	await AsyncStorage.setItem('@juntouApp:idPointDisembark',JSON.stringify(idPointEmbark.id))
 	
 	navigation.navigate("SelectHour");
 	
+}
+if(loading){
+    return(
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large" color="#666" />
+
+        </View>
+    );
 }
 
   return (

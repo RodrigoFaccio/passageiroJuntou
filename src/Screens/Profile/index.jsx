@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import {
   View,
   Image,
@@ -11,15 +11,17 @@ import {
   Alert,
 } from "react-native";
 import styles from "./styles";
-import { Feather, EvilIcons } from "@expo/vector-icons";
 import { textos } from "../../constants";
 import * as ImagePicker from "expo-image-picker";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as Permissions from "expo-permissions";
-import Header from "../../Components/HeaderPerfil";
+import AuthContext, { AuthProvider } from '../../context/auth';
+import api from "../../api";
 
 const Register = ({ navigation }) => {
-  const [nome, setNome] = useState("");
+  const { signed, user, signIn, loading,signOut } = useContext(AuthContext);
+  const [name, setNome] = useState();
+  const [userDetails, setUserDetails] = useState();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpass, setConfirmpass] = useState("");
@@ -60,30 +62,37 @@ const Register = ({ navigation }) => {
       console.log(E);
     }
   }
+  useEffect(()=>{
+	  async function userDetails(){
+		const {data} = await api.get(`/passageiro/${user.id}/datails`);
+		setNome(data.name);
+		setEmail(data.email);
+		setWhatsapp(data.whatsapp);
+		console.log(data)
+
+
+		setUserDetails(data);
+
+	  }
+	  userDetails();
+  },[])
+
+  async function alterar(){
+	  const {data} = await api.post(`/passageiro/${user.id}/alteracao`,{name,email,whatsapp});
+
+	  if(data==1)
+	  	return alert('Alterado com sucesso')
+
+	  
+
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <Header />
 
-        <View style={styles.imageView}>
-          {image == "" ? (
-            <TouchableOpacity onPress={() => pickImage()}>
-              <View style={styles.borderIcon}>
-                <EvilIcons name="camera" color="#fff" size={43} />
-              </View>
-              <Text style={styles.IconText}>{textos.adicionar}</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => pickImage()}>
-              <View>
-                <Image source={{ uri: image }} style={styles.borderIcon} />
-              </View>
-              <Text style={styles.IconText}>{textos.alterar}</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        
 
         <View>
           <View style={styles.viewInput}>
@@ -91,7 +100,7 @@ const Register = ({ navigation }) => {
               placeholder={textos.nome}
               style={styles.input}
               onChangeText={(nome) => setNome(nome)}
-              value={nome}
+              value={name}
             />
             <TextInput
               placeholder={textos.email}
@@ -113,14 +122,14 @@ const Register = ({ navigation }) => {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleRegister()}
+              onPress={() => alterar()}
             >
               <Text style={styles.TextButton}>{textos.alterarprofile}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.buttonSair}
-              onPress={() => navigation.replace("Root")}
+              onPress={()=>{signOut()}}
             >
               <Text style={styles.TextButton}>{textos.loggout}</Text>
             </TouchableOpacity>

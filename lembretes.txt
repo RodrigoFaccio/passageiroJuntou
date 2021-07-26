@@ -1,6 +1,3 @@
-Criar botao cancelar
-excluir trip_people e diminuir pessoa na viagem
-
-criar nova lista 
-em todas as telas 
-
+Na tela quase la verificar se nao tem motorista e reecaminhar 
+Tirar botao do zap
+tirar X tbm 

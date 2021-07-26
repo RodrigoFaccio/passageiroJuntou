@@ -8,6 +8,10 @@ import SelectHour from '../Screens/SelectHour';
 import DisembarkPoint from '../Screens/DisembarkPoint';
 import CreateAwaiting from '../Screens/CreateAwaiting';
 import Confirmed from '../Screens/Confirmed';
+import Profile from '../Screens/Profile';
+import { useNavigation } from '@react-navigation/core';
+
+
 import AuthContext, { AuthProvider } from '../context/auth';
 
 
@@ -25,12 +29,17 @@ const App = createStackNavigator();
 
 
 const AppRoutes = ()=>{
+	
 const { signed, user,signIn,signOut } = useContext(AuthContext);
-const LogoLeft = ()=>(
-    <View>
-        <Image style={{width:40,height:40, marginLeft:10}} source={require('../Assets/perfil.png')} />
-    </View>
-);
+const LogoLeft = ()=>{
+	const navigation = useNavigation();
+
+	return(
+		<TouchableOpacity onPress={()=>{navigation.navigate('Profile')}}>
+			<Image style={{width:40,height:40, marginRight:10}} source={require('../Assets/perfil.png')} />
+		</TouchableOpacity>
+	);
+}
 const LogoRight = ()=>(
     <View>
         <Image style={{width:40,height:40,marginRight:10}} source={require('../Assets/whats.png')} />
@@ -69,13 +78,10 @@ const LogoRightE = ()=>(
                     
                     
                 },
-            headerLeft: () => (
+            headerRight: () => (
               <LogoLeft  />
             ),
-            headerRight: () => (
-                <LogoRight  />
-				
-              ),
+           
           })}
             />
             <App.Screen name="Embark" component={Embark}options={{title:'Embarque'}}
@@ -87,12 +93,10 @@ const LogoRightE = ()=>(
                         
                         
                     },
-                headerLeft: () => (
-                  <LogoLeftE  />
-                ),
                 headerRight: () => (
-                    <LogoRightE  />
-                  ),
+                  <LogoLeft  />
+                ),
+               
               })}
             />
 			 <App.Screen name="DisembarkDistrict" component={DisembarkDistrict}options={{title:'Embarque'}}
@@ -104,12 +108,10 @@ const LogoRightE = ()=>(
                         
                         
                     },
-                headerLeft: () => (
-                  <LogoLeftE  />
-                ),
                 headerRight: () => (
-                    <LogoRightE  />
-                  ),
+                  <LogoLeft  />
+                ),
+               
               })}
             />
 			 <App.Screen name="SelectHour" component={SelectHour}options={{title:'Embarque'}}
@@ -121,12 +123,10 @@ const LogoRightE = ()=>(
                         
                         
                     },
-                headerLeft: () => (
-                  <LogoLeftE  />
-                ),
                 headerRight: () => (
-                    <LogoRightE  />
-                  ),
+                  <LogoLeft />
+                ),
+               
               })}
             />
 			<App.Screen name="DisembarkPoint" component={DisembarkPoint}options={{title:'Embarque'}}
@@ -138,31 +138,15 @@ const LogoRightE = ()=>(
                         
                         
                     },
-                headerLeft: () => (
-                  <LogoLeftE  />
-                ),
                 headerRight: () => (
-                    <LogoRightE  />
-                  ),
+                  <LogoLeft  />
+                ),
+               
               })}
             />
 
 <App.Screen name="CreateAwaiting" component={CreateAwaiting}options={{title:'Juntando'}}
-            options={({ navigation }) => ({
-                title:'Ponto do desembarque',
-                    headerTitleAlign:'center',
-                    headerTitleStyle:{
-                        color:'white',
-                        
-                        
-                    },
-                headerLeft: () => (
-                  <LogoLeftE  />
-                ),
-                headerRight: () => (
-                    <LogoRightE  />
-                  ),
-              })}
+            
             />
 			
 
@@ -170,17 +154,24 @@ const LogoRightE = ()=>(
             options={({ navigation }) => ({
                 title:'Ponto do desembarque',
                     headerTitleAlign:'center',
+					
                     headerTitleStyle:{
                         color:'white',
                         
                         
                     },
-                headerLeft: () => (
-                  <LogoLeftE  />
-                ),
-                headerRight: () => (
-                    <LogoRightE  />
-                  ),
+              
+              })}
+            />
+			<App.Screen name="Profile" component={Profile} options={{title:'Perfil'}}
+            options={({ navigation }) => ({
+                title:'Perfil',
+                    headerTitleAlign:'center',
+                    headerTitleStyle:{
+                        color:'white',
+                        
+                        
+					}
               })}
             />
 			

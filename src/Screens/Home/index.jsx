@@ -57,16 +57,49 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 	
 
   useEffect(()=>{
-	async function bairrosRequest(){
-		const responseSearch = await api.get(`/bairro/lista`);
-		setData(responseSearch.data)
-		setLoading(false)
+	
+
+    
+	async function checkTrip(){
+		console.log('---------')
+
+		const response = await api.get(`/trip/${user.id}/checkTripUser`);
+		console.log(response.data)
 
 
-	  }
-	  bairrosRequest();
+		const {data} = response;
 
-    async function Search(search){
+		const idTrip = data.id_trip
+
+	
+	
+	
+		if(data!='Não a usuarios'){
+			const {data} = await api.get(`/trip/${idTrip}/checkTripStatus`);
+			const dados = data
+			console.log(data.status);
+
+			if(data.status==1){
+				navigation.navigate('Confirmed',dados)
+
+			}else{
+				navigation.navigate('CreateAwaiting',dados)
+
+			}
+	
+		}else{
+			console.log('dasdasdsadasd')
+	 		 bairrosRequest();
+
+	
+		}
+	
+		
+	
+	}
+	checkTrip();
+
+	async function Search(search){
       if(search){
 		console.log(search)
 
@@ -81,36 +114,18 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
     }
     Search(search);
 	
-	async function checkTrip(){
-		const {data} = await api.get(`/trip/${user.id}/checkTripUser`);
-		const idTrip = data.id_trip
-		setLoading(false)
-	
-	
-	
-		if(data){
-			const {data} = await api.get(`/trip/${idTrip}/checkTripStatus`);
-			const dados = data
-			console.log(data.status);
-			if(data.status==1){
-				navigation.navigate('Confirmed',dados)
-			}else{
-				navigation.navigate('CreateAwaiting')
-			}
-			setLoading(false)
-	
-		}else{
-		setLoading(false)
-	
-		}
-	
-		
-	
-	}
-	checkTrip();
-	setLoading(false)
+async function bairrosRequest(){
+		const responseSearch = await api.get(`/bairro/lista`);
+		setData(responseSearch.data)
 
-	
+
+	  }
+
+	function finalLoad(){
+		setLoading(false)
+
+	}
+	finalLoad();
 
 	
   },[search]);
@@ -171,9 +186,7 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 
         
 
-		<TouchableOpacity onPress={sair}>
-			<Text>Sair</Text>
-		</TouchableOpacity>
+		
 		
 
 		

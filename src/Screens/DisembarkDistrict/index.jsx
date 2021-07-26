@@ -6,7 +6,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import { SearchBar, CheckBox } from "react-native-elements";
 import Header from "../../Components/HeaderHome";
@@ -26,6 +27,7 @@ const DisembarkDistrict = ({ navigation,route }) => {
   const url='http://192.168.0.125:3005';
   const [data,setData] = useState([]);
   const [dataSearch,setDataSearch] = useState([]);
+  const [loading,setLoad] = useState(true);
 
   useEffect(()=>{
 	  async function DistrictDisembark(){
@@ -34,10 +36,14 @@ const DisembarkDistrict = ({ navigation,route }) => {
 			//Bairro dominate então mostrar bairros secundários
 			const {data} = await api.get(`/bairro/n/like/noDominante`)
 			setData(data);
+			  setLoad(false)
+
 			
 		}else{
 			const {data} = await api.get(`/bairro/n/like/dominante`)
 			setData(data);
+			  setLoad(false)
+
 		}
 	}	  
 	  DistrictDisembark();
@@ -49,10 +55,13 @@ const DisembarkDistrict = ({ navigation,route }) => {
 			  //Bairro dominate então mostrar bairros secundários
 			  const {data} = await api.get(`/bairro/${search}/like/noDominante`)
 			  setDataSearch(data);
+			  setLoad(false)
 			  
 		  }else{
 			  const {data} = await api.get(`/bairro/${search}/like/dominante`)
 			  setDataSearch(data);
+			  setLoad(false)
+
 		  }
 		  
 		}else{
@@ -70,6 +79,14 @@ const DisembarkDistrict = ({ navigation,route }) => {
 	navigation.navigate("DisembarkPoint");
 	
 	
+}
+if(loading){
+    return(
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large" color="#666" />
+
+        </View>
+    );
 }
 
   return (

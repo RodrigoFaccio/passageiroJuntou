@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View,TouchableOpacity } from "react-native";
 import styles from './styles';
 import api from '../../api';
 import AsyncStorage from '@react-native-community/async-storage';
+import AuthContext, { AuthProvider } from '../../context/auth';
 
 
 const TimePicker = ({horasEx,dataTrip,navigation}) => {
@@ -10,36 +11,42 @@ const TimePicker = ({horasEx,dataTrip,navigation}) => {
   const [aviso,setAviso] = useState('');
   const [hours,setHours] = useState('');
   const [selected,setSelected] = useState('');
+  const { signed, user, signIn, loading } = useContext(AuthContext);
 
 
   async function createTrip(horas){
 
 	if(selected){
+
 		const idDistrictEmbark = await AsyncStorage.getItem('@juntouApp:idDistrictEmbark');
 		const idDisembarkDistrict = await AsyncStorage.getItem('@juntouApp:idDisembarkDistrict');
 		const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark');
-		const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
+		const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark');
+
+
 	
 	
-	
-		const {data} = await api.post(`/trip/${idDistrictEmbark}/${idPointEmbark}/${idDisembarkDistrict}/${idPointDisembark}/1/create`,{
+		try{
+			console.log(user.id)
+			
+		
+		const {data} = await api.post(`/trip/${idDistrictEmbark}/${idPointEmbark}/${idDisembarkDistrict}/${idPointDisembark}/${user.id}/create`,{
 			"time":horas
 		});
-		console.log(data);
+		console.log(data)
 		if(data=='Viagem já existe'){
-			setAviso(data);
-	
-			setInterval(() => {
-			setAviso('');
-				
-			}, 2000);
-		}else{
-			setModalVisible(false);
-			await AsyncStorage.setItem('@juntouApp:idTrip',JSON.stringify(data.id));
-			
-			navigation.navigate("CreateAwaiting");
-	
-		}
+		setAviso(data);
+
+		
+	}else{
+		setModalVisible(false)
+		navigation.navigate('CreateAwaiting');
+	}
+		
+	}catch(erro){
+		console.log(erro)
+	}
+
 	}else{
 		setAviso('Selecione um horário');
 
@@ -53,7 +60,6 @@ const TimePicker = ({horasEx,dataTrip,navigation}) => {
 }
 function confirmTrip(time){
 	setSelected(time);
-	console.log(time)
 
 }
 

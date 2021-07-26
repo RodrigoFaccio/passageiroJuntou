@@ -74,7 +74,7 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 		}
 		DistrictDisembark();
 		async function PointEmbark(){
-			console.log('embark')
+			//console.log('embark')
 
 			//Buscar nome do ponto de embarque
 			const idPointEmbark = await AsyncStorage.getItem('@juntouApp:idPointEmbark')
@@ -89,7 +89,7 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 			//Buscar nome do ponto de desembarque
 			const idPointDisembark = await AsyncStorage.getItem('@juntouApp:idPointDisembark')
 			const {data} = await api.get(`/point/${idPointDisembark}/info`)
-			console.log(data[0].name)
+			//console.log(data[0].name)
 			
 		
 
@@ -125,14 +125,14 @@ const { signed, user,signIn,signOut } = useContext(AuthContext);
 		//Confirmar a viagem
 		async function confirmAddTrip(){
 		
-			console.log(hoursSelected)
+			console.log('ola')
 
 
 			const {data} = await api.post(`/trip/${hoursSelected}/${user.id}/createExist`);
 			await AsyncStorage.setItem('@juntouApp:idTrip',JSON.stringify(data.id_trip));
+			const dados = data;
 
-
-			navigation.navigate("CreateAwaiting");
+			navigation.navigate("CreateAwaiting",dados);
 
 		}
 
